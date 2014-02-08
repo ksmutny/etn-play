@@ -2,6 +2,10 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 
-object App extends Controller {
-  def index = Action(Ok("I am running"))
+trait App {
+  this: Controller =>
+
+  def index = Action(Ok("Hello, I am running"))
 }
+
+object App extends Controller with App
