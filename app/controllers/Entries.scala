@@ -16,7 +16,10 @@ trait EntriesController {
         entryRepository.add(Entry(body))
         Ok
     }
+  }
 
+  def listEntries = Action {
+    Ok(entryRepository.findAll mkString "\n")
   }
 }
 

@@ -1,2 +1,4 @@
 # Method	URL				Controller method
 GET			/				controllers.Hello.world
+POST		/entries		controllers.Entries.addEntry
+GET			/entries		controllers.Entries.listEntries
