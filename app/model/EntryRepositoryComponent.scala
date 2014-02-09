@@ -6,7 +6,7 @@ trait EntryRepositoryComponent {
 
   trait EntryRepository {
 
-    def add(e: Entry): Unit
+    def add(e: Entry): Entry
 
     def findAll: Seq[Entry]
 

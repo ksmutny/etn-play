@@ -13,8 +13,8 @@ trait EntriesController {
     request.body.asText match {
       case None | Some("") => BadRequest
       case Some(body) =>
-        entryRepository.add(Entry(body))
-        Ok
+        val e = entryRepository.add(Entry(body))
+        Ok(e.id.get.toString)
     }
   }
 

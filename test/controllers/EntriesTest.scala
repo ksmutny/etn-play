@@ -20,8 +20,10 @@ class EntriesTest extends FunSpec with Matchers {
 
     it("should contain posted entry") {
       val c = new TestEntries
-      status(c.addEntry(FakeRequest().withTextBody("neco"))) should be(OK)
-      c.entryRepository.findAll should be(Seq(Entry("neco")))
+      val res = c.addEntry(FakeRequest().withTextBody("neco"))
+      status(res) should be(OK)
+      val id = contentAsString(res).toLong
+      c.entryRepository.findAll should be(Seq(Entry(Some(id), "neco")))
     }
 
     it("should not accept empty entry") {
@@ -44,9 +46,9 @@ class EntriesTest extends FunSpec with Matchers {
 
     it("should list entries") {
       val c = new TestEntries
-      c.addEntry(FakeRequest().withTextBody("neco1"))
-      c.addEntry(FakeRequest().withTextBody("neco2"))
-      contentAsString(c.listEntries(FakeRequest())) should be("Entry(neco1)\nEntry(neco2)")
+      val e1 = c.entryRepository.add(Entry("neco1"))
+      val e2 = c.entryRepository.add(Entry("neco2"))
+      contentAsString(c.listEntries(FakeRequest())) should be(s"$e1\n$e2")
     }
   }
 
@@ -55,10 +57,12 @@ class EntriesTest extends FunSpec with Matchers {
       new WithApplication {
         val response1 = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco1")).get
         status(response1) should be(OK)
+        val id1 = contentAsString(response1).toLong
         val response2 = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco2")).get
+        val id2 = contentAsString(response2).toLong
         status(response2) should be(OK)
         val result = route(FakeRequest(method = "GET", path = "/entries")).get
-        contentAsString(result) should be("Entry(neco1)\nEntry(neco2)")
+        contentAsString(result) should be(s"Entry(Some($id1),neco1)\nEntry(Some($id2),neco2)")
       }
     }
 

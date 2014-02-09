@@ -17,10 +17,13 @@ class InMemoryEntryRepositorySuite extends FunSpec with Matchers {
 
     it("should contain all added entries in insertion order") {
 
-      repo.add(Entry("a"))
-      repo.add(Entry("r"))
+      val e1 = repo.add(Entry(None, "a"))
+      val e2 = repo.add(Entry(None, "r"))
 
-      repo.findAll should be(Seq(Entry("a"), Entry("r")))
+      e1.id should not be None
+      e2.id should not be None
+      e1.id should not be e2.id
+      repo.findAll should be(Seq(e1, e2))
 
     }
 
