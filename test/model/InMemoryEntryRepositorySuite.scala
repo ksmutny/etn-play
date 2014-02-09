@@ -7,7 +7,7 @@ class InMemoryEntryRepositorySuite extends FunSpec with Matchers {
 
   describe("Entry repository") {
 
-    val repo = new InMemoryEntryRepositoryComponent().entryRepository
+    val repo = new InMemoryEntryRepositoryComponent {}.entryRepository
 
     it("should be empty when created") {
 

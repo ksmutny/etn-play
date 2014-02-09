@@ -1,6 +1,6 @@
 package model
 
-class InMemoryEntryRepositoryComponent extends EntryRepositoryComponent {
+trait InMemoryEntryRepositoryComponent extends EntryRepositoryComponent {
 
   val entryRepository = new InMemoryEntryRepository
 
