@@ -5,6 +5,6 @@ import play.api.mvc.Action
 
 object Hello extends Controller {
 
-  def world = Action(Ok(<response>Hello world</response>))
+  def world = Action(Ok("Hello world"))
 
 }
