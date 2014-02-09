@@ -27,6 +27,15 @@ class InMemoryEntryRepositorySuite extends FunSpec with Matchers {
 
     }
 
+    it("should find entry by id") {
+      val e1 = repo.add(Entry(None, "karel"))
+      val e2 = repo.add(Entry(None, "zdenek"))
+
+      repo.findById(e1.id.get) should be(Some(e1))
+      repo.findById(e2.id.get) should be(Some(e2))
+      repo.findById(-1000) should be(None)
+    }
+
   }
 
 }

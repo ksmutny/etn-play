@@ -21,6 +21,14 @@ trait EntriesController {
   def listEntries = Action {
     Ok(entryRepository.findAll mkString "\n")
   }
+
+  def getEntry(id: Long) = Action {
+    entryRepository.findById(id) match {
+      case Some(e) => Ok(e.toString())
+      case None => NotFound
+    }
+
+  }
 }
 
 object Entries extends Controller

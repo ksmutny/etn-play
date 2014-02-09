@@ -18,6 +18,8 @@ trait InMemoryEntryRepositoryComponent extends EntryRepositoryComponent {
 
     def findAll(): Seq[Entry] = entries.reverse
 
+    def findById(id: Long): Option[Entry] = entries.find(_.id == Some(id))
+
   }
 
 }

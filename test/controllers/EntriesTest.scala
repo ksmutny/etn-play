@@ -66,5 +66,15 @@ class EntriesTest extends FunSpec with Matchers {
       }
     }
 
+    it("Should return entry by id") {
+      new WithApplication {
+        val response1 = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco1")).get
+        val id1 = contentAsString(response1).toLong
+        val result = route(FakeRequest(method = "GET", path = "/entries/" + id1)).get
+        contentAsString(result) should be(s"Entry(Some($id1),neco1)")
+        status(result) should be(OK)
+      }
+    }
+
   }
 }

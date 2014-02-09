@@ -10,5 +10,7 @@ trait EntryRepositoryComponent {
 
     def findAll: Seq[Entry]
 
+    def findById(id: Long): Option[Entry]
+
   }
 }

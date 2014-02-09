@@ -2,3 +2,4 @@
 GET			/				controllers.Hello.world
 POST		/entries		controllers.Entries.addEntry
 GET			/entries		controllers.Entries.listEntries
+GET			/entries/:id	controllers.Entries.getEntry(id: Long)
