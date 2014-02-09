@@ -1,0 +1,2 @@
+# Method	URL				Controller method
+GET			/				controllers.Hello.world
