@@ -36,6 +36,27 @@ class InMemoryEntryRepositorySuite extends FunSpec with Matchers {
       repo.findById(-1000) should be(None)
     }
 
+    it("should throw exception if hating nonexistent entry") {
+      evaluating { repo.hate(-139) } should produce[NoSuchElementException]
+    }
+
+    it("should add 1 hate and return 1") {
+      val e2 = repo.add(Entry(None, "zdenek neni blbec"))
+      repo.hate(e2.id.get) should be(1)
+      repo.hate(e2.id.get) should be(2)
+    }
+
+    it("should set 0 hates for new entry") {
+      val e1 = repo.add(Entry(None, "zdenek mozna neni blbec"))
+      repo.findHates(e1.id.get) should be(0)
+    }
+
+    it("should increment and count hates for new entry") {
+      val e1 = repo.add(Entry(None, "zdenek mozna neni blbec"))
+      repo.findHates(e1.id.get) should be(0)
+      repo.hate(e1.id.get) should be(1)
+      repo.findHates(e1.id.get) should be(1)
+    }
   }
 
 }

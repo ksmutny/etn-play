@@ -12,5 +12,8 @@ trait EntryRepositoryComponent {
 
     def findById(id: Long): Option[Entry]
 
+    def hate(id: Long): Int
+
+    def findHates(id: Long): Int
   }
 }
