@@ -49,6 +49,10 @@ trait EntriesController extends EntryWrites {
   def hateEntry(id: Long) = Action {
     Ok(entryRepository.hate(id).toString)
   }
+
+  def getHates(id: Long) = Action {
+    Ok(entryRepository.findHates(id).toString)
+  }
 }
 
 object Entries extends Controller

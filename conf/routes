@@ -4,3 +4,4 @@ POST		/entries			controllers.Entries.addEntry
 GET			/entries			controllers.Entries.listEntries
 GET			/entries/:id		controllers.Entries.getEntry(id: Long)
 POST		/entries/:id/hate	controllers.Entries.hateEntry(id: Long)
+GET			/entries/:id/hate	controllers.Entries.getHates(id: Long)

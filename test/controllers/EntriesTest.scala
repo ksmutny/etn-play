@@ -107,6 +107,11 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
         val hateResponse = route(FakeRequest(method = "POST", path = s"/entries/$id/hate")).get
         contentAsString(hateResponse).toInt should be(1)
         status(hateResponse) should be(OK)
+
+        val hatesResponse = route(FakeRequest(method = "GET", path = s"/entries/$id/hate")).get
+        contentAsString(hatesResponse).toInt should be(1)
+        status(hatesResponse) should be(OK)
+
       }
     }
 
