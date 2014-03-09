@@ -99,5 +99,16 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
       }
     }
 
+    it("Should POST hate for entry") {
+      new WithApplication {
+
+        val response = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco1")).get
+        val id = contentAsString(response).toLong
+        val hateResponse = route(FakeRequest(method = "POST", path = s"/entries/$id/hate")).get
+        contentAsString(hateResponse).toInt should be(1)
+        status(hateResponse) should be(OK)
+      }
+    }
+
   }
 }

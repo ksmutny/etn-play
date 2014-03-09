@@ -1,5 +1,6 @@
-# Method	URL				Controller method
-GET			/				controllers.Hello.world
-POST		/entries		controllers.Entries.addEntry
-GET			/entries		controllers.Entries.listEntries
-GET			/entries/:id	controllers.Entries.getEntry(id: Long)
+# Method	URL					Controller method
+GET			/					controllers.Hello.world
+POST		/entries			controllers.Entries.addEntry
+GET			/entries			controllers.Entries.listEntries
+GET			/entries/:id		controllers.Entries.getEntry(id: Long)
+POST		/entries/:id/hate	controllers.Entries.hateEntry(id: Long)

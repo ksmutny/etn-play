@@ -12,9 +12,9 @@ trait InMemoryEntryRepositoryComponent extends EntryRepositoryComponent {
 
     def add(e: Entry): Entry = {
       val en = e.copy(id = Some(id))
-      id += 1
       entries = en :: entries
       hates = hates.updated(id, 0)
+      id += 1
       en
     }
 
