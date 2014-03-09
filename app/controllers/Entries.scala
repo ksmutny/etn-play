@@ -7,8 +7,9 @@ import play.api.mvc.Action
 import model.Entry
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
+import model.EntryWrites
 
-trait EntriesController {
+trait EntriesController extends EntryWrites {
   self: Controller with EntryRepositoryComponent =>
 
   def addEntry = Action { request =>
@@ -24,16 +25,18 @@ trait EntriesController {
     Ok(entryRepository.findAll mkString "\n")
   }
 
-  def getEntry(id: Long) = Action { request =>
+  def getEntry(id: Long) = Action { implicit request =>
 
     entryRepository.findById(id) match {
       case Some(e) =>
         if (request.accepts(MimeTypes.TEXT)) {
           Ok(e.toString())
         } else if (request.accepts(MimeTypes.JSON)) {
-          Ok(Json.obj(
-            "id" -> e.id.get,
-            "body" -> e.body))
+          Ok(Json.toJson(e))
+
+          //          Ok(Json.obj(
+          //            "id" -> e.id.get,
+          //            "body" -> e.body))
         } else {
           BadRequest
         }
