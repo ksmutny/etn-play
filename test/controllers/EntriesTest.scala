@@ -14,8 +14,9 @@ import play.api.http.MimeTypes
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsNumber
 import play.api.libs.json.Json
+import model.EntryWrites
 
-class EntriesTest extends FunSpec with Matchers {
+class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
   class TestEntries extends Controller
     with EntriesController
@@ -53,7 +54,7 @@ class EntriesTest extends FunSpec with Matchers {
       val c = new TestEntries
       val e1 = c.entryRepository.add(Entry("neco1"))
       val e2 = c.entryRepository.add(Entry("neco2"))
-      contentAsString(c.listEntries(FakeRequest())) should be(s"$e1\n$e2")
+      contentAsJson(c.listEntries(FakeRequest())) should be(Json.toJson(Seq(e1, e2)))
     }
 
     it("should return entry as plain text") {
@@ -68,12 +69,8 @@ class EntriesTest extends FunSpec with Matchers {
       val c = new TestEntries
       val e1 = c.entryRepository.add(Entry("neco1"))
       val request = FakeRequest().withHeaders(HeaderNames.ACCEPT -> MimeTypes.JSON)
-      // val expectedJson = JsObject(Seq("id" -> JsNumber(e1.id.get), "body" -> JsString(e1.body)))
-      val expectedJson = Json.obj(
-        "id" -> e1.id.get,
-        "body" -> e1.body)
 
-      contentAsJson(c.getEntry(e1.id.get)(request)) should be(expectedJson)
+      contentAsJson(c.getEntry(e1.id.get)(request)) should be(Json.toJson(e1))
 
     }
   }
@@ -88,7 +85,7 @@ class EntriesTest extends FunSpec with Matchers {
         val id2 = contentAsString(response2).toLong
         status(response2) should be(OK)
         val result = route(FakeRequest(method = "GET", path = "/entries")).get
-        contentAsString(result) should be(s"Entry(Some($id1),neco1)\nEntry(Some($id2),neco2)")
+        contentAsJson(result) should be(Json.arr(Entry(Some(id1), "neco1"), Entry(Some(id2), "neco2")))
       }
     }
 

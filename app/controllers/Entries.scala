@@ -22,7 +22,7 @@ trait EntriesController extends EntryWrites {
   }
 
   def listEntries = Action {
-    Ok(entryRepository.findAll mkString "\n")
+    Ok(Json.toJson(entryRepository.findAll))
   }
 
   def getEntry(id: Long) = Action { implicit request =>
