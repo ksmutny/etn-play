@@ -5,6 +5,8 @@ import model.EntryRepositoryComponent
 import model.InMemoryEntryRepositoryComponent
 import play.api.mvc.Action
 import model.Entry
+import play.api.http.MimeTypes
+import play.api.libs.json.Json
 
 trait EntriesController {
   self: Controller with EntryRepositoryComponent =>
@@ -22,12 +24,23 @@ trait EntriesController {
     Ok(entryRepository.findAll mkString "\n")
   }
 
-  def getEntry(id: Long) = Action {
-    entryRepository.findById(id) match {
-      case Some(e) => Ok(e.toString())
-      case None => NotFound
-    }
+  def getEntry(id: Long) = Action { request =>
 
+    entryRepository.findById(id) match {
+      case Some(e) =>
+        if (request.accepts(MimeTypes.TEXT)) {
+          Ok(e.toString())
+        } else if (request.accepts(MimeTypes.JSON)) {
+          Ok(Json.obj(
+            "id" -> e.id.get,
+            "body" -> e.body))
+        } else {
+          BadRequest
+        }
+
+      case None => NotFound
+
+    }
   }
 }
 
