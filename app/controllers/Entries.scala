@@ -18,7 +18,7 @@ trait EntriesController extends EntryWrites {
   val entryForm = Form(
     mapping(
       "body" -> (nonEmptyText verifying Constraints.maxLength(2048)),
-      "context" -> longNumber)(Entry.apply)((e: Entry) => Some(e.body, e.context)))
+      "context" -> longNumber)((b: String, c: Long) => Entry(None, b, c))((e: Entry) => Some(e.body, e.context)))
 
   def addEntry = Action { implicit request =>
     entryForm.bindFromRequest().fold(

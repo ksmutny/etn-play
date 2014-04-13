@@ -58,14 +58,14 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
     it("should list entries") {
       val c = new TestEntries
-      val e1 = c.entryRepository.add(Entry("neco1", 0))
-      val e2 = c.entryRepository.add(Entry("neco2", 0))
+      val e1 = c.entryRepository.add(Entry(None, "neco1", 0))
+      val e2 = c.entryRepository.add(Entry(None, "neco2", 0))
       contentAsJson(c.listEntries(FakeRequest())) should be(Json.toJson(Seq(e1, e2)))
     }
 
     it("should return entry as plain text") {
       val c = new TestEntries
-      val e1 = c.entryRepository.add(Entry("neco1", 0))
+      val e1 = c.entryRepository.add(Entry(None, "neco1", 0))
       val request = FakeRequest().withHeaders(HeaderNames.ACCEPT -> MimeTypes.TEXT)
       contentAsString(c.getEntry(e1.id.get)(request)) should be(e1.toString)
 
@@ -73,7 +73,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
     it("should return entry as JSON") {
       val c = new TestEntries
-      val e1 = c.entryRepository.add(Entry("neco1", 0))
+      val e1 = c.entryRepository.add(Entry(None, "neco1", 0))
       val request = FakeRequest().withHeaders(HeaderNames.ACCEPT -> MimeTypes.JSON)
 
       contentAsJson(c.getEntry(e1.id.get)(request)) should be(Json.toJson(e1))

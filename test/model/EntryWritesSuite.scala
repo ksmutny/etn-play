@@ -11,7 +11,7 @@ class EntryWritesSuite extends FunSpec with Matchers with EntryWrites {
 
     it("works with no id") {
 
-      val json = Json.toJson(Entry("entry", 10))
+      val json = Json.toJson(Entry(None, "entry", 10))
       val exp = Json.obj("id" -> JsNull, "body" -> "entry", "context" -> 10)
 
       json should be(exp)
