@@ -11,16 +11,16 @@ class EntryWritesSuite extends FunSpec with Matchers with EntryWrites {
 
     it("works with no id") {
 
-      val json = Json.toJson(Entry("entry"))
-      val exp = Json.obj("id" -> JsNull, "body" -> "entry")
+      val json = Json.toJson(Entry("entry", 10))
+      val exp = Json.obj("id" -> JsNull, "body" -> "entry", "context" -> 10)
 
       json should be(exp)
 
     }
     it("works") {
 
-      val json = Json.toJson(Entry(Some(5l), "entry"))
-      val exp = Json.obj("id" -> 5l, "body" -> "entry")
+      val json = Json.toJson(Entry(Some(5l), "entry", 11))
+      val exp = Json.obj("id" -> 5l, "body" -> "entry", "context" -> 11)
 
       json should be(exp)
 

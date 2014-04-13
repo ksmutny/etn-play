@@ -12,7 +12,8 @@ trait EntryWrites {
 
   implicit val entryWrites: Writes[Entry] = (
     (__ \ "id").format[Option[Long]] and
-    (__ \ "body").format[String])(Entry.apply, unlift(Entry.unapply))
+    (__ \ "body").format[String] and
+    (__ \ "context").format[Long])(Entry.apply, unlift(Entry.unapply))
 
   // alternative non-DSL solution  
   //  implicit val entryWrites: Writes[Entry] = new Writes[Entry] {

@@ -16,7 +16,7 @@ trait EntriesController extends EntryWrites {
     request.body.asText match {
       case None | Some("") => BadRequest
       case Some(body) =>
-        val e = entryRepository.add(Entry(body))
+        val e = entryRepository.add(Entry(body, 0))
         Ok(e.id.get.toString)
     }
   }

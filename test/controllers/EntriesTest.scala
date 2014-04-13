@@ -29,7 +29,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
       val res = c.addEntry(FakeRequest().withTextBody("neco"))
       status(res) should be(OK)
       val id = contentAsString(res).toLong
-      c.entryRepository.findAll should be(Seq(Entry(Some(id), "neco")))
+      c.entryRepository.findAll should be(Seq(Entry(Some(id), "neco", 0)))
     }
 
     it("should not accept empty entry") {
@@ -52,14 +52,14 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
     it("should list entries") {
       val c = new TestEntries
-      val e1 = c.entryRepository.add(Entry("neco1"))
-      val e2 = c.entryRepository.add(Entry("neco2"))
+      val e1 = c.entryRepository.add(Entry("neco1", 0))
+      val e2 = c.entryRepository.add(Entry("neco2", 0))
       contentAsJson(c.listEntries(FakeRequest())) should be(Json.toJson(Seq(e1, e2)))
     }
 
     it("should return entry as plain text") {
       val c = new TestEntries
-      val e1 = c.entryRepository.add(Entry("neco1"))
+      val e1 = c.entryRepository.add(Entry("neco1", 0))
       val request = FakeRequest().withHeaders(HeaderNames.ACCEPT -> MimeTypes.TEXT)
       contentAsString(c.getEntry(e1.id.get)(request)) should be(e1.toString)
 
@@ -67,7 +67,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
     it("should return entry as JSON") {
       val c = new TestEntries
-      val e1 = c.entryRepository.add(Entry("neco1"))
+      val e1 = c.entryRepository.add(Entry("neco1", 0))
       val request = FakeRequest().withHeaders(HeaderNames.ACCEPT -> MimeTypes.JSON)
 
       contentAsJson(c.getEntry(e1.id.get)(request)) should be(Json.toJson(e1))
@@ -85,7 +85,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
         val id2 = contentAsString(response2).toLong
         status(response2) should be(OK)
         val result = route(FakeRequest(method = "GET", path = "/entries")).get
-        contentAsJson(result) should be(Json.arr(Entry(Some(id1), "neco1"), Entry(Some(id2), "neco2")))
+        contentAsJson(result) should be(Json.arr(Entry(Some(id1), "neco1", 0), Entry(Some(id2), "neco2", 0)))
       }
     }
 
@@ -94,7 +94,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
         val response1 = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco1")).get
         val id1 = contentAsString(response1).toLong
         val result = route(FakeRequest(method = "GET", path = "/entries/" + id1)).get
-        contentAsString(result) should be(s"Entry(Some($id1),neco1)")
+        contentAsString(result) should be(s"Entry(Some($id1),neco1,0)")
         status(result) should be(OK)
       }
     }
