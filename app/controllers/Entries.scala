@@ -10,13 +10,14 @@ import play.api.libs.json.Json
 import model.EntryWrites
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation._
 
 trait EntriesController extends EntryWrites {
   self: Controller with EntryRepositoryComponent =>
 
   val entryForm = Form(
     mapping(
-      "body" -> nonEmptyText,
+      "body" -> (nonEmptyText verifying Constraints.maxLength(2048)),
       "context" -> longNumber)(Entry.apply)((e: Entry) => Some(e.body, e.context)))
 
   def addEntry = Action { implicit request =>

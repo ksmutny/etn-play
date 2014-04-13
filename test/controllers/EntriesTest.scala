@@ -38,6 +38,12 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
       c.entryRepository.findAll should be(Seq())
     }
 
+    it("should not accept long body") {
+      val c = new TestEntries
+      status(c.addEntry(postEntryRequest("x" * 2049))) should be(BAD_REQUEST)
+      c.entryRepository.findAll should be(Seq())
+    }
+
     it("should not accept request with no body") {
       val c = new TestEntries
       status(c.addEntry(FakeRequest())) should be(BAD_REQUEST)
