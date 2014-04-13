@@ -8,17 +8,31 @@ import model.Entry
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import model.EntryWrites
+import play.api.data.Form
+import play.api.data.Forms._
 
 trait EntriesController extends EntryWrites {
   self: Controller with EntryRepositoryComponent =>
 
-  def addEntry = Action { request =>
-    request.body.asText match {
-      case None | Some("") => BadRequest
-      case Some(body) =>
-        val e = entryRepository.add(Entry(body, 0))
-        Ok(e.id.get.toString)
-    }
+  val entryForm = Form(
+    mapping(
+      "body" -> nonEmptyText,
+      "context" -> longNumber)(Entry.apply)((e: Entry) => Some(e.body, e.context)))
+
+  def addEntry = Action { implicit request =>
+    entryForm.bindFromRequest().fold(
+      formWithErrors => BadRequest,
+      entry =>
+        {
+          val e = entryRepository.add(entry)
+          Ok(e.id.get.toString)
+        })
+    //    request.body.asText match {
+    //      case None | Some("") => BadRequest
+    //      case Some(body) =>
+    //        val e = entryRepository.add(Entry(body, 0))
+    //        Ok(e.id.get.toString)
+    //    }
   }
 
   def listEntries = Action {

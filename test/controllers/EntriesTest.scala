@@ -26,7 +26,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
     it("should contain posted entry") {
       val c = new TestEntries
-      val res = c.addEntry(FakeRequest().withTextBody("neco"))
+      val res = c.addEntry(postEntryRequest("neco"))
       status(res) should be(OK)
       val id = contentAsString(res).toLong
       c.entryRepository.findAll should be(Seq(Entry(Some(id), "neco", 0)))
@@ -34,7 +34,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
     it("should not accept empty entry") {
       val c = new TestEntries
-      status(c.addEntry(FakeRequest().withTextBody(""))) should be(BAD_REQUEST)
+      status(c.addEntry(postEntryRequest(""))) should be(BAD_REQUEST)
       c.entryRepository.findAll should be(Seq())
     }
 
@@ -78,10 +78,10 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
   describe("URL Entries") {
     it("POST should return OK and list entries") {
       new WithApplication {
-        val response1 = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco1")).get
+        val response1 = route(postEntryRequest("neco1")).get
         status(response1) should be(OK)
         val id1 = contentAsString(response1).toLong
-        val response2 = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco2")).get
+        val response2 = route(postEntryRequest("neco2")).get
         val id2 = contentAsString(response2).toLong
         status(response2) should be(OK)
         val result = route(FakeRequest(method = "GET", path = "/entries")).get
@@ -91,7 +91,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
 
     it("Should return entry by id") {
       new WithApplication {
-        val response1 = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco1")).get
+        val response1 = route(postEntryRequest("neco1")).get
         val id1 = contentAsString(response1).toLong
         val result = route(FakeRequest(method = "GET", path = "/entries/" + id1)).get
         contentAsString(result) should be(s"Entry(Some($id1),neco1,0)")
@@ -102,7 +102,7 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
     it("Should POST hate for entry") {
       new WithApplication {
 
-        val response = route(FakeRequest(method = "POST", path = "/entries").withTextBody("neco1")).get
+        val response = route(postEntryRequest("neco1")).get
         val id = contentAsString(response).toLong
         val hateResponse = route(FakeRequest(method = "POST", path = s"/entries/$id/hate")).get
         contentAsString(hateResponse).toInt should be(1)
@@ -115,5 +115,11 @@ class EntriesTest extends FunSpec with Matchers with EntryWrites {
       }
     }
 
+  }
+
+  def postEntryRequest(body: String, context: Long = 0) = {
+    FakeRequest(method = "POST", path = "/entries").withFormUrlEncodedBody(
+      "body" -> body,
+      "context" -> context.toString)
   }
 }
